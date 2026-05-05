@@ -24,7 +24,7 @@ services:
     volumes:
       # Persist the trained model + reference parquet so the API does not
       # re-download UCI data on every restart.
-      - bike-artifacts:/app/artifacts
+      - ./artifacts:/app/artifacts
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
       interval: 15s
