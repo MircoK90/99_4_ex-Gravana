@@ -50,6 +50,17 @@ services:
       - bike-api
     restart: unless-stopped
 
+
+
+  evaluation:
+    build:
+      context: .
+      dockerfile: src/evaluation/Dockerfile
+    depends_on:
+      - bike-api
+    command: ["python", "run_evaluation.py", "--api-url", "http://bike-api:8080"]
+
+
   grafana:
     image: grafana/grafana:11.2.0
     container_name: grafana

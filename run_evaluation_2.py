@@ -117,6 +117,7 @@ def wait_for_api(retries: int = 20, delay: float = 3.0) -> None:
 
 
 def main() -> None:
+    global API_URL  # noqa: PLW0603
     parser = argparse.ArgumentParser()
     parser.add_argument("--fire-alert", action="store_true",
                         help="Send a corrupted batch instead of the normal weekly stream.")
@@ -124,7 +125,6 @@ def main() -> None:
                         help="Override the API base URL (default: %(default)s)")
     args = parser.parse_args()
 
-    global API_URL  # noqa: PLW0603
     API_URL = args.api_url
 
     wait_for_api()
