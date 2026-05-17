@@ -31,7 +31,7 @@ ALL_MODEL_FEATS = NUM_FEATS + CAT_FEATS
 TARGET = 'cnt'
 
 DTEDAY_COL_NAME = 'dteday'
-COLUMNS_FOR_EVALUATION_PAYLOAD = ALL_MODEL_FEATS + [TARGET, DTEDAY_COL_NAME]
+COLUMNS_FOR_EVALUATION_PAYLOAD = ALL_MODEL_FEATS + [TARGET]
 
 
 # --- Fonctions d'ingestion et de préparation des données (alignées sur l'examen Evidently) ---
@@ -81,15 +81,15 @@ def run_evaluation(full_data: pd.DataFrame, period_name: str, start_date_str: st
         
         if eval_payload_df.shape[0] > EVALUATION_SAMPLE_SIZE:
             eval_payload_df = eval_payload_df.sample(n=EVALUATION_SAMPLE_SIZE, random_state=42)
-
-        eval_payload_df[DTEDAY_COL_NAME] = eval_payload_df[DTEDAY_COL_NAME].astype(str)
+        # old
+        # eval_payload_df[DTEDAY_COL_NAME] = eval_payload_df[DTEDAY_COL_NAME].astype(str)
 
         evaluation_data_payload = eval_payload_df.to_dict(orient='records')
         
         print(f"Sending {len(evaluation_data_payload)} samples to API endpoint {API_EVALUATE_URL}...")
         response = requests.post(
             API_EVALUATE_URL,
-            json={'data': evaluation_data_payload, 'evaluation_period_name': period_name},
+            json={'records': evaluation_data_payload, 'period_label': period_name},
             timeout=300
         )
         response.raise_for_status()

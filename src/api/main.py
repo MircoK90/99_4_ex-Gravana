@@ -170,11 +170,34 @@ class EvaluationRecord(BikeSharingInput):
     cnt: int = Field(..., ge=0)
 
 
-class EvaluationRequest(BaseModel):
-    """Payload for /evaluate. `period_label` is just a free-form name we log."""
 
-    records: List[EvaluationRecord]
+class EvaluationRequest(BaseModel):
+    # Exam format
+    records: Optional[List[EvaluationRecord]] = None
     period_label: Optional[str] = None
+
+    # Original exercise format
+    data: Optional[List[dict]] = None
+    evaluation_period_name: Optional[str] = None
+
+    def normalized_records(self) -> List[EvaluationRecord]:
+        """Return a unified list of EvaluationRecord objects."""
+        if self.records is not None:
+            return self.records
+
+        if self.data is not None:
+            # Convert dicts → EvaluationRecord
+            out = []
+            for item in self.data:
+                # remove dteday if present
+                item = {k: v for k, v in item.items() if k != "dteday"}
+                out.append(EvaluationRecord(**item))
+            return out
+
+        raise ValueError("No valid record list found.")
+    
+    def normalized_label(self) -> Optional[str]:
+        return self.period_label or self.evaluation_period_name
 
 
 class PredictionOutput(BaseModel):
@@ -182,13 +205,20 @@ class PredictionOutput(BaseModel):
 
 
 class EvaluationReportOutput(BaseModel):
-    period_label: Optional[str]
-    n_records: int
+    message: str
     rmse: Optional[float]
+    mape: Optional[float]
     mae: Optional[float]
-    r2: Optional[float]
-    drift_share: Optional[float]
-    dataset_drift: Optional[bool]
+    r2score: Optional[float]
+    drift_detected: int
+    evaluated_items: int
+    # period_label: Optional[str]
+    # n_records: int
+    # rmse: Optional[float]
+    # mae: Optional[float]
+    # r2: Optional[float]
+    # drift_share: Optional[float]
+    # dataset_drift: Optional[bool]
 
 
 # ---------------------------------------------------------------------------
@@ -316,6 +346,7 @@ def _extract_metrics(report_dict: dict) -> dict:
             out["mae"] = current.get("mean_abs_error")
             # Some evidently versions name it differently -- try both.
             out["r2"] = current.get("r2_score", current.get("r2"))
+            out["mape"] = current.get("mean_abs_perc_error")   # new
 
         elif name == "DatasetDriftMetric":
             out["drift_share"] = result.get("drift_share")
@@ -413,7 +444,10 @@ def evaluate(payload: EvaluationRequest):
         raise HTTPException(status_code=400, detail="`records` must be non-empty.")
 
     # Build the current dataframe and add the model's predictions
-    current = pd.DataFrame([r.model_dump() for r in payload.records])
+    records = payload.normalized_records()
+    label = payload.normalized_label()
+
+    current = pd.DataFrame([r.model_dump() for r in records])
     current[PREDICTION] = state["model"].predict(current[ALL_FEATURES])
 
     reference = state["reference"]
@@ -441,7 +475,7 @@ def evaluate(payload: EvaluationRequest):
     EVAL_COUNTER.inc()
     logger.info(
         "Evaluation '%s' on %d rows: RMSE=%.3f MAE=%.3f R2=%.3f drift_share=%.3f drift=%s",
-        payload.period_label,
+        label,
         len(current),
         extracted["rmse"] or float("nan"),
         extracted["mae"] or float("nan"),
@@ -451,13 +485,21 @@ def evaluate(payload: EvaluationRequest):
     )
 
     return EvaluationReportOutput(
-        period_label=payload.period_label,
-        n_records=len(current),
+
+        message=f"Evaluation for '{payload.period_label}' completed.",
         rmse=extracted["rmse"],
+        mape=extracted.get("mape"),       # add MAPE extraction below
         mae=extracted["mae"],
-        r2=extracted["r2"],
-        drift_share=extracted["drift_share"],
-        dataset_drift=extracted["dataset_drift"],
+        r2score=extracted["r2"],
+        drift_detected=1 if extracted["dataset_drift"] else 0,
+        evaluated_items=len(current),
+        # period_label=label,
+        # n_records=len(current),
+        # rmse=extracted["rmse"],
+        # mae=extracted["mae"],
+        # r2=extracted["r2"],
+        # drift_share=extracted["drift_share"],
+        # dataset_drift=extracted["dataset_drift"],
     )
 
 
