@@ -44,8 +44,11 @@ evaluation:
 	# Sends /evaluate batches for the weeks of February 2011.
 	# Requires `requests` on the host. The script will pip-install it on the fly
 	# inside a temp venv if it's missing.
+	# c fpr cammand, iof request is installed, exit code 0, if Not the secound part
 	@$(PYTHON) -c "import requests" 2>/dev/null || $(PYTHON) -m pip install --quiet --user requests
-	$(PYTHON) run_evaluation.py
+	# old on host
+	# $(PYTHON) src/evaluation/run_evaluation.py
+	docker compose run --rm evaluation
 
 fire-alert:
 	# Triggers BOTH the Prometheus alert (HighModelRMSE + DatasetDriftDetected)

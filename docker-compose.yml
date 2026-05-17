@@ -24,6 +24,7 @@ services:
     volumes:
       # Persist the trained model + reference parquet so the API does not
       # re-download UCI data on every restart.
+      # -fsS -> Fail silent if http status >= 400, S = shows only Error
       - ./artifacts:/app/artifacts
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
@@ -31,7 +32,7 @@ services:
       timeout: 5s
       retries: 6
       start_period: 30s
-    restart: unless-stopped
+    restart: unless-stopped   # always restart unless explicitly stopped via make
 
   prometheus:
     image: prom/prometheus:v2.54.1
@@ -41,10 +42,10 @@ services:
     volumes:
       - ./deployment/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./deployment/prometheus/rules:/etc/prometheus/rules:ro
-      - prometheus-data:/prometheus
+      - prometheus-data:/prometheus    # persist prometheus data where everything is stored, also e.x. TSDB Time Series db
     command:
-      - --config.file=/etc/prometheus/prometheus.yml
-      - --storage.tsdb.path=/prometheus
+      - --config.file=/etc/prometheus/prometheus.yml # prometheus gets telled where it config lies
+      - --storage.tsdb.path=/prometheus         # prometheus gets time series data in persistent store
       - --web.enable-lifecycle
     depends_on:
       - bike-api
@@ -67,11 +68,11 @@ services:
     ports:
       - "3000:3000"
     environment:
-      # Default credentials -- change in any non-local deployment!
+      # credentials
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
-      # Enable Grafana's built-in unified alerting (default since 9.x)
+      # Enable Grafana's alerting
       - GF_UNIFIED_ALERTING_ENABLED=true
       - GF_ALERTING_ENABLED=false
     volumes:
@@ -90,14 +91,16 @@ services:
     ports:
       - "9100:9100"
     volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
+      - /proc:/host/proc:ro   # kernel, processes, memory, etc.
+      - /sys:/host/sys:ro     # hardware infos, devices, Kernel sub
+      - /:/rootfs:ro          # Standard for node expoter, acves on host system to mine system metrics
     command:
       - --path.procfs=/host/proc
       - --path.sysfs=/host/sys
       - --path.rootfs=/rootfs
+      # /dev , /proc, /sys, /run, and Docker/Kubelet directories are excluded because they are either virtual filesystems or have a high churn of mount points that would cause noise in the metrics.
       - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run|var/lib/docker/.+|var/lib/kubelet/.+|rootfs/run|rootfs/var/lib/docker/.+)($$|/)
+      # only real disk and partiuitions shall be tracked
       - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs|tmpfs)$$
     restart: unless-stopped
 
