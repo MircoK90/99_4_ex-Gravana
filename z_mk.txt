@@ -1,2 +1,39 @@
+mk: inspect volumes
 
-docker compose run --rm evaluation
+
+# English: copy volume contents to a local folder so VS Code can browse it normally
+mkdir -p ~/vol-inspect/prometheus ~/vol-inspect/grafana
+
+docker run --rm \
+  -v 99_4_ex-gravana_prometheus-data:/src \
+  -v ~/vol-inspect/prometheus:/dst \
+  alpine cp -r /src/. /dst/
+
+docker run --rm \
+  -v 99_4_ex-gravana_grafana-data:/src \
+  -v ~/vol-inspect/grafana:/dst \
+  alpine cp -r /src/. /dst/
+
+# English: open the folder in VS Code
+code ~/vol-inspect/
+
+
+
+OR
+mkdir -p ~/vol-inspect/bike-artifacts
+docker run --rm \
+  -v 99_4_ex-gravana_bike-artifacts:/src \
+  -v ~/vol-inspect/bike-artifacts:/dst \
+  alpine sh -c "cp -r /src/. /dst/"
+
+mkdir -p ~/vol-inspect/prometheus
+docker run --rm \
+  -v 99_4_ex-gravana_prometheus-data:/src \
+  -v ~/vol-inspect/prometheus:/dst \
+  alpine sh -c "cp -r /src/. /dst/"
+
+mkdir -p ~/vol-inspect/grafana
+docker run --rm \
+  -v 99_4_ex-gravana_grafana-data:/src \
+  -v ~/vol-inspect/grafana:/dst \
+  alpine sh -c "cp -r /src/. /dst/"
