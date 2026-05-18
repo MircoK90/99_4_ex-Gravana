@@ -45,7 +45,7 @@ evaluation:
 	# Requires `requests` on the host. The script will pip-install it on the fly
 	# inside a temp venv if it's missing.
 	# c fpr cammand, iof request is installed, exit code 0, if Not the secound part
-	@$(PYTHON) -c "import requests" 2>/dev/null || $(PYTHON) -m pip install --quiet --user requests
+	# $(PYTHON) -c "import requests" 2>/dev/null || $(PYTHON) -m pip install --quiet --user requests
 	# old on host
 	# $(PYTHON) src/evaluation/run_evaluation.py
 	docker compose run --rm evaluation
@@ -65,7 +65,12 @@ fire-alert:
 	@echo "   (evidently_dataset_drift_detected == 1) end to end."
 
 traffic:
-	bash traffic_simulation.sh
+	# bash traffic_simulation.sh
+	# $(PYTHON) src/evaluation/run_evaluation.py --simulate-traffic
+ 	# $(PYTHON) -c "import requests" 2>/dev/null || $(PYTHON) -m pip install --quiet --user requests
+	docker compose run --rm evaluation python run_evaluation.py --simulate-traffic
+
+
 
 logs:
 	$(COMPOSE) logs -f --tail=200

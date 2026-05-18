@@ -148,9 +148,30 @@ def generate_traffic(count: int, full_data: pd.DataFrame):
     print(f"{count} prediction requests sent.")
 
 
+
+import argparse
 # --- Main execution logic ---
 if __name__ == "__main__":
-    _full_data_cache = _process_data(_fetch_data())
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--api-url', type=str, default="http://bike-api:8080")
+    parser.add_argument('--simulate-traffic', action="store_true")
+    parser.add_argument('--generate-traffic', type=int, default=0)
+    args = parser.parse_args()
+
+    API_EVALUATE_URL = f"{args.api_url}/evaluate"
+    API_PREDICT_URL = f"{args.api_url}/predict"
+
+    full_data = _process_data(_fetch_data())
+
+    if args.simulate_traffic:
+        generate_traffic(200, full_data)
+        exit(0)
+    
+    if args.generate_traffic > 0:
+        generate_traffic(args.generate_traffic, full_data)
+        exit(0)
+
+    # Default behavior
     start_date, end_date = DEFAULT_EVAL_PERIOD
-    run_evaluation(_full_data_cache, DEFAULT_PERIOD_NAME, start_date, end_date)
+    run_evaluation(full_data, DEFAULT_PERIOD_NAME, start_date, end_date)

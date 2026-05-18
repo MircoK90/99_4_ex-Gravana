@@ -440,8 +440,10 @@ def evaluate(payload: EvaluationRequest):
     if state["model"] is None or state["reference"] is None:
         raise HTTPException(status_code=503, detail="Model / reference not ready.")
 
-    if not payload.records:
-        raise HTTPException(status_code=400, detail="`records` must be non-empty.")
+    if not payload.records and not payload.data:
+        raise HTTPException(
+            status_code=400,
+            detail="records or 'data 'must be provided and non-empty.")
 
     # Build the current dataframe and add the model's predictions
     records = payload.normalized_records()
