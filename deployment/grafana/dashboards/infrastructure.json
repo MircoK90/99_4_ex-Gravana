@@ -7,18 +7,21 @@
   "version": 1,
   "refresh": "15s",
   "time": { "from": "now-30m", "to": "now" },
-  "panels": [
+  "panels":
+  [
     {
       "id": 1,
       "type": "timeseries",
       "title": "CPU usage (%)",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
-      "fieldConfig": {
+      "fieldConfig":
+      {
         "defaults": { "unit": "percent", "min": 0, "max": 100 }
       },
       "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "targets": [
+      "targets":
+      [
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -27,6 +30,7 @@
         }
       ]
     },
+
     {
       "id": 2,
       "type": "timeseries",
@@ -35,7 +39,8 @@
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
       "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100 } },
       "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "targets": [
+      "targets":
+      [
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -44,6 +49,7 @@
         }
       ]
     },
+
     {
       "id": 3,
       "type": "timeseries",
@@ -52,7 +58,8 @@
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
       "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100 } },
       "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "targets": [
+      "targets":
+      [
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -61,6 +68,7 @@
         }
       ]
     },
+
     {
       "id": 4,
       "type": "timeseries",
@@ -69,7 +77,8 @@
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
       "fieldConfig": { "defaults": { "unit": "Bps" } },
       "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "targets": [
+      "targets":
+      [
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -84,6 +93,7 @@
         }
       ]
     },
+
     {
       "id": 5,
       "type": "stat",
@@ -92,7 +102,8 @@
       "gridPos": { "h": 6, "w": 8, "x": 0, "y": 16 },
       "fieldConfig": { "defaults": { "unit": "short", "decimals": 2 } },
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value" },
-      "targets": [
+      "targets":
+      [
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -100,6 +111,7 @@
         }
       ]
     },
+
     {
       "id": 6,
       "type": "stat",
@@ -108,7 +120,8 @@
       "gridPos": { "h": 6, "w": 8, "x": 8, "y": 16 },
       "fieldConfig": { "defaults": { "unit": "s" } },
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value" },
-      "targets": [
+      "targets":
+      [
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -116,22 +129,27 @@
         }
       ]
     },
+
     {
       "id": 7,
       "type": "stat",
       "title": "node-exporter up?",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "gridPos": { "h": 6, "w": 8, "x": 16, "y": 16 },
-      "fieldConfig": {
-        "defaults": {
-          "mappings": [
+      "fieldConfig":
+      {
+        "defaults":
+        {
+          "mappings":
+          [
             { "options": { "0": { "text": "DOWN", "color": "red" } }, "type": "value" },
             { "options": { "1": { "text": "UP", "color": "green" } }, "type": "value" }
           ]
         }
       },
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
-      "targets": [
+      "targets":
+      [
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },

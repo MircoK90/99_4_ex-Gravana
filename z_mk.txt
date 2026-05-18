@@ -14,26 +14,13 @@ docker run --rm \
   -v ~/vol-inspect/grafana:/dst \
   alpine cp -r /src/. /dst/
 
-# English: open the folder in VS Code
-code ~/vol-inspect/
 
+# volumes
+sudo cp -r \
+  /var/lib/docker/volumes/99_4_ex-gravana_prometheus-data \
+  /var/lib/docker/volumes/99_4_ex-gravana_grafana-data \
+  /mnt/c/Users/MircoK/Desktop/docker-volumes-inspect/
 
+OR all
+sudo cp -r /var/lib/docker/volumes /mnt/c/Users/MircoK/Desktop/docker-volumes-inspect
 
-OR
-mkdir -p ~/vol-inspect/bike-artifacts
-docker run --rm \
-  -v 99_4_ex-gravana_bike-artifacts:/src \
-  -v ~/vol-inspect/bike-artifacts:/dst \
-  alpine sh -c "cp -r /src/. /dst/"
-
-mkdir -p ~/vol-inspect/prometheus
-docker run --rm \
-  -v 99_4_ex-gravana_prometheus-data:/src \
-  -v ~/vol-inspect/prometheus:/dst \
-  alpine sh -c "cp -r /src/. /dst/"
-
-mkdir -p ~/vol-inspect/grafana
-docker run --rm \
-  -v 99_4_ex-gravana_grafana-data:/src \
-  -v ~/vol-inspect/grafana:/dst \
-  alpine sh -c "cp -r /src/. /dst/"

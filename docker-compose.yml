@@ -51,8 +51,6 @@ services:
       - bike-api
     restart: unless-stopped
 
-
-
   evaluation:
     build:
       context: .
@@ -106,6 +104,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  bike-artifacts:
   prometheus-data:
   grafana-data:

@@ -7,20 +7,25 @@
   "version": 1,
   "refresh": "30s",
   "time": { "from": "now-1h", "to": "now" },
-  "panels": [
+  "panels":
+  [
     {
       "id": 1,
       "type": "stat",
       "title": "RMSE (current)",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
-      "fieldConfig": {
-        "defaults": {
+      "fieldConfig":
+      {
+        "defaults":
+        {
           "unit": "short",
           "decimals": 2,
-          "thresholds": {
+          "thresholds":
+          {
             "mode": "absolute",
-            "steps": [
+            "steps":
+            [
               { "color": "green", "value": null },
               { "color": "orange", "value": 150 },
               { "color": "red", "value": 200 }
@@ -29,7 +34,8 @@
         }
       },
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
-      "targets": [
+      "targets":
+      [
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -37,6 +43,7 @@
         }
       ]
     },
+
     {
       "id": 2,
       "type": "stat",
@@ -45,7 +52,8 @@
       "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
       "fieldConfig": { "defaults": { "unit": "short", "decimals": 2 } },
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value" },
-      "targets": [
+      "targets":
+      [
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -53,17 +61,21 @@
         }
       ]
     },
+
     {
       "id": 3,
       "type": "stat",
       "title": "R² (current)",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
-      "fieldConfig": {
-        "defaults": {
+      "fieldConfig":
+      {
+        "defaults":
+        {
           "unit": "short",
           "decimals": 3,
-          "thresholds": {
+          "thresholds":
+          {
             "mode": "absolute",
             "steps": [
               { "color": "red", "value": null },
@@ -82,6 +94,7 @@
         }
       ]
     },
+
     {
       "id": 4,
       "type": "stat",
@@ -89,8 +102,10 @@
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "gridPos": { "h": 6, "w": 6, "x": 18, "y": 0 },
       "fieldConfig": {
-        "defaults": {
-          "mappings": [
+        "defaults":
+        {
+          "mappings":
+          [
             { "options": { "0": { "text": "OK", "color": "green" } }, "type": "value" },
             { "options": { "1": { "text": "DRIFT", "color": "red" } }, "type": "value" }
           ],
@@ -101,7 +116,8 @@
         }
       },
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
-      "targets": [
+      "targets":
+      [
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -109,6 +125,7 @@
         }
       ]
     },
+
     {
       "id": 5,
       "type": "timeseries",
@@ -117,7 +134,8 @@
       "gridPos": { "h": 9, "w": 12, "x": 0, "y": 6 },
       "fieldConfig": { "defaults": { "unit": "short" } },
       "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["lastNotNull"] }, "tooltip": { "mode": "multi" } },
-      "targets": [
+      "targets":
+      [
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -132,6 +150,7 @@
         }
       ]
     },
+
     {
       "id": 6,
       "type": "timeseries",
@@ -140,7 +159,8 @@
       "gridPos": { "h": 9, "w": 12, "x": 12, "y": 6 },
       "fieldConfig": { "defaults": { "unit": "short", "decimals": 3, "min": -1, "max": 1 } },
       "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "single" } },
-      "targets": [
+      "targets":
+      [
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -149,6 +169,7 @@
         }
       ]
     },
+
     {
       "id": 7,
       "type": "timeseries",
@@ -160,9 +181,11 @@
         "defaults": {
           "unit": "percentunit",
           "min": 0, "max": 1,
-          "thresholds": {
+          "thresholds":
+          {
             "mode": "absolute",
-            "steps": [
+            "steps":
+            [
               { "color": "green", "value": null },
               { "color": "orange", "value": 0.3 },
               { "color": "red", "value": 0.5 }
@@ -172,7 +195,8 @@
         }
       },
       "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "single" } },
-      "targets": [
+      "targets":
+      [
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
