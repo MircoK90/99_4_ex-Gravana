@@ -6,14 +6,12 @@ dataset. Single-command bring-up via `make`.
 
 ## Stack at a glance
 
-| Service       | Port | Purpose                                        |
-|---------------|------|------------------------------------------------|
-| `bike-api`    | 8080 | FastAPI: `/predict`, `/evaluate`, `/metrics`   |
-| `prometheus`  | 9090 | Scrapes `bike-api` + `node-exporter`, alerting |
-| `grafana`     | 3000 | Provisioned datasource, dashboards, ML alert   |
-| `node-exporter` | 9100 | Host metrics (CPU/RAM/disk)                  |
+`bike-api`      8080  FastAPI: `/predict`, `/evaluate`, `/metrics`
+`prometheus`    9090  Scrapes `bike-api` + `node-exporter`, alerting
+`grafana`       3000  Provisioned datasource, dashboards, ML alert
+`node-exporter` 9100  Host metrics (CPU/RAM/disk) 
 
-## Quick start
+## start
 
 ```bash
 make all           # build images, start everything

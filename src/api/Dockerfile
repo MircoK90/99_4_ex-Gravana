@@ -1,5 +1,5 @@
-# Slim Python base. We install build-essential because pyarrow / sklearn
-# wheels still occasionally need a compiler on minor mismatches.
+# Slim Python base. Install build essentialdue pyarrow / sklearn
+# compiler on minor for less mismatches
 FROM python:3.11-slim
 
 WORKDIR /app
