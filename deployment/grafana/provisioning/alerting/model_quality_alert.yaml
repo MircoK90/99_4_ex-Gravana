@@ -11,7 +11,7 @@ groups:
     rules:
       - uid: rmse-alert-grafana
         title: HighModelRMSE_Grafana
-        condition: C
+        condition: C                        # freely choosen 
         data:
           - refId: A
             relativeTimeRange:
@@ -21,7 +21,7 @@ groups:
             model:
               editorMode: code
               expr: model_rmse_score
-              instant: true
+              instant: true                 # every explicit value, every ex 30 secounds 
               intervalMs: 1000
               maxDataPoints: 43200
               refId: A
@@ -29,30 +29,30 @@ groups:
             relativeTimeRange:
               from: 0
               to: 0
-            datasourceUid: __expr__
+            datasourceUid: __expr__        # C is Expression, Grafana waits
             model:
+              type: threshold
+              expression: A
               conditions:
                 - evaluator:
                     params: [200]
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params: [A]
+                    type: gt               # greather then
                   reducer:
                     type: last
+                  query:
+                    params: [A]             # Takae value A grather then 200, C gets True 
+                  operator:
+                    type: and
                   type: query
               datasource:
                 type: __expr__
                 uid: __expr__
-              expression: A
               intervalMs: 1000
               maxDataPoints: 43200
               refId: C
-              type: threshold
         noDataState: NoData
         execErrState: Error
-        for: 1m
+        for: 10s                             # C = True over 1 mins?
         annotations:
           summary: "Bike-sharing model RMSE > 200 (Grafana alert)"
           description: "model_rmse_score has exceeded 200 for over 1 minute. Trigger via 'make fire-alert'."
